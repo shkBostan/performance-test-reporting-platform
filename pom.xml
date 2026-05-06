@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  =============================================================================
+  Maven POM (Project Object Model) for PerfLoadSim
+  =============================================================================
+  This file defines the build configuration for the Performance Load Simulator
+  application. It specifies dependencies, plugins, and project metadata.
+
+  The application uses Spring Boot 3.2.5 with WebFlux (reactive stack),
+  Gatling for load testing engine, JPA + PostgreSQL + Flyway for persistence,
+  Lombok for reducing boilerplate code, and SpringDoc OpenAPI for API documentation.
+
+  @author s Bostan
+  @since Apr, 2026
+  =============================================================================
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!-- Spring Boot Parent Starter: provides dependency management for Spring modules -->
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.2.5</version>
+		<relativePath/>
+	</parent>
+
+	<!-- Project coordinates -->
+	<groupId>ir.shkBostan.performance-test-reporting-platform</groupId>
+	<artifactId>performance-test-reporting-platform</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>Performance Load Simulator</name>
+	<description>Custom load testing platform with precise RPS control (Semaphore), async reporting, JPA/Hibernate, Flyway, and paginated historical API.Built with Spring WebFlux and Java HttpClient(Sanitized public demo)</description>
+
+	<!-- Java version and Gatling version properties -->
+	<properties>
+		<java.version>17</java.version>
+		<gatling.version>3.12.0</gatling.version>  <!-- Latest stable Gatling version -->
+	</properties>
+
+	<!-- ========================================================================
+	     Dependencies
+	     ===================================================================== -->
+	<dependencies>
+		<!-- Spring Boot WebFlux: reactive web stack (non‑blocking) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+		</dependency>
+
+		<!-- Gatling core libraries -->
+		<dependency>
+			<groupId>io.gatling</groupId>
+			<artifactId>gatling-core</artifactId>
+			<version>${gatling.version}</version>
+		</dependency>
+		<!-- Gatling HTTP support -->
+		<dependency>
+			<groupId>io.gatling</groupId>
+			<artifactId>gatling-http</artifactId>
+			<version>${gatling.version}</version>
+		</dependency>
+
+		<!-- Gatling App: programmatic execution of simulations -->
+		<dependency>
+			<groupId>io.gatling</groupId>
+			<artifactId>gatling-app</artifactId>
+			<version>${gatling.version}</version>
+		</dependency>
+
+		<!-- Gatling Highcharts: generates HTML performance reports -->
+		<dependency>
+			<groupId>io.gatling.highcharts</groupId>
+			<artifactId>gatling-charts-highcharts</artifactId>
+			<version>${gatling.version}</version>
+		</dependency>
+
+		<!-- SpringDoc OpenAPI: auto‑generates Swagger UI from annotations -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webflux-ui</artifactId>
+			<version>2.5.0</version>
+		</dependency>
+
+		<!-- Lombok: reduces boilerplate (getters, setters, builders, etc.) -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- Jackson Databind for JSON processing -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+
+		<!-- Spring Boot Test starter -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- JPA (Hibernate) for database persistence -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
+		<!-- PostgreSQL JDBC driver -->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- Flyway for database schema migration -->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+		</dependency>
+		<!-- H2 database -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+	</dependencies>
+
+	<!-- ========================================================================
+	     Build Plugins Configuration
+	     ===================================================================== -->
+	<build>
+		<plugins>
+			<!-- Spring Boot Maven Plugin: packages executable JAR with embedded Tomcat/Netty -->
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<!-- Exclude Lombok from the packaged JAR (it is only needed at compile time) -->
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+
+			<!-- Maven Compiler Plugin: configures Java 17 and Lombok annotation processing -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>17</source>
+					<target>17</target>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>1.18.32</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
